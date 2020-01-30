@@ -1,109 +1,454 @@
-![hero](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/hero.jpg)
+# SUTDoggo
 
-# The Stanford Doggo Project
-## Overview Of Stanford Doggo
-Stanford Doggo is a highly agile robot designed to be an accessible platform for legged robot research. The robot currently holds the record (among all robots) for the highest vertical jumping agility<sup>1</sup> and can jump twice as high as any existing quadruped robot! Weighing in at a little less than 5kg, Stanford Doggo is easy and safe to develop on, but at the same time, don't expect Stanford Doggo to carry heavy loads or climb super aggressive terrain. If you use a portion of this project or want further technical details, please cite our paper presented at ICRA 2019: https://ieeexplore.ieee.org/document/8794436 (freely available on arxiv: https://arxiv.org/abs/1905.04254). The project is generously supported by Stanford Student Robotics http://roboticsclub.stanford.edu/.
+SUTDoggo is a highly agile robot designed to be an accessible platform for legged robot research. We adopt the Stanford Doggo for this project. This could serve to inspire fellow SOAR members in robotics.
 
-<sup>1</sup>[Vertical jumping agility] = [maximum vertical jump height] / [time from onset of actuation to apogee of jump]
+Credits to the [original Stanford Doggo repository](https://github.com/Nate711/StanfordDoggoProject)!
 
-## Building Doggo
-We hope you build your own Stanford Doggo! In the Hardware folder of this repository we've linked the Fusion 360 CAD model and it includes all the parts you'll need to source. Many of the custom pieces are either 3d printed or waterjet (instead of manually milled for instance), which means you will only have to do post-processing work. For example, the primary links on each waterjet leg assembly require you to drill and tap a hole for a set screw. If you need help, please reference the CAD, submit an issue to this github repo, or email the owner, nathan kau [at] stanford [dot edu].
+This repository will be divided into three parts to house the different parts of the SUTDoggo:
 
-You can find a work-in-progress bill of materials here: https://docs.google.com/spreadsheets/d/1MQRoZCfsMdJhHQ-ht6YvhzNvye6xDXO8vhWQql2HtlI/edit#gid=726381752. Please don't hesitate to ask for help!
+1. This main root folder will contain the main project files such as the BOM, updated CAD files, circuit diagram for electronics, general guidelines, project goals and plans, FAQ, etc.
+2. The ODrive subfolder will contain the modified version of the ODrive firmware (merged v0.4.11 of the official factory firmware with Nate's code customizations).
+3. The Doggo subfolder will contain the custom Doggo firmware. Currently, it is still using the default Doggo codebase. Future plan would be to refactor this codebase into a ROS workspace to enable ROS package integrations.
 
-## Doggo Software
-The brains of Stanford Doggo are split between the ODrive motor controllers and the central Teensy microcontroller. To run Doggo, you'll need to flash the our custom ODrive firmware onto the four motor controllers in the robot and then configure them using the doggo_setup.py script included in that repository. Quick note, if you have a different mechanical design than Doggo, make sure to update the gear_ratio parameter in the code or via odrivetool. After uploading the firmware and configuring, you'll next want to upload the Doggo Arduino code to the central microcontroller. This code is responsible for switching between different states and sending the right position commands to the robot. When you power on the robot, the four legs will first do a calibration routine so that the motors and encoders become synced up, and then the robot will enter an idle mode. Once in idle, you can send serial commands over the wireless xbee network to command Doggo to trot, jump, etc. Please reference the Doggo software repo for more information.
+## Table of Contents <a name="table-of-contents"></a>
 
-## Help
-We encourage you to submit issues to this github, or email the owner, nathan kau [at] stanford [dot edu]. 
+- [SUTDoggo](#sutdoggo)
+  - [Table of Contents](#table-of-contents)
+  - [Stakeholders & Maintainers](#stakeholders-and-maintainers)
+  - [Objectives & Deliverables](#objectives-and-deliverables)
+    - [Goal Deadlines & Status](#deadlines)
+    - [Extra Objectives](#extra-objectives)
+  - [Features & Technologies](#features-and-technologies)
+    - [Features](#features)
+    - [Technologies](#technologies)
+  - [Prerequisites](#prerequisites)
+  - [Demo](#demo)
+  - [Troubleshooting & FAQ](#troubleshooting-and-faq)
+  - [Future Plans & Implementations](#future-plans-and-implementations)
+  - [Components](#components)
+    - [Mechanical](#mechanical)
+    - [Controller/Driver](#controller-driver)
+    - [Sensors](#sensors)
+  - [Additional Resources](#additional-resources)
 
-# A blog post about Doggo
-Hi all, I thought I'd share more about the Stanford Doggo Project, which you might have seen in Oskar's New Year's update! We're a group of undergrad and grad students in Stanford Student Robotics and have been working on legged robots for the last year and a half. Our latest robot, Stanford Doggo, is a shoebox-sized quadruped robot that can walk, trot, pronk, and jump around.
+## Stakeholders & Maintainers <a name="stakeholders-and-maintainers"></a>
 
-I think this video gives the best overview of what Doggo is:
+- Project Lead: [James Raphael Tiovalen](https://github.com/jamestiotio) (Maintainer)
+- Mechanical Engineers:
+    - [Kevin Ma Yuchen](https://github.com/Kevinskwk)
+    - Zhi Cong
+    - Yoong Hao
+    - [Dody Senputra](https://github.com/ulaladungdung)
+- Electrical Engineers:
+    - [Chung Wah Kit](https://github.com/sdencanted)
+    - Gerald Wong
+- Software Developers:
+    - [James Raphael Tiovalen](https://github.com/jamestiotio)
+    - [Dody Senputra](https://github.com/ulaladungdung)
+    - [Kevin Ma Yuchen](https://github.com/Kevinskwk)
+    - [Chung Wah Kit](https://github.com/sdencanted)
+- Mentors:
+    - [@methylDragon](https://github.com/methylDragon)
+    - [@Fasermaler](https://github.com/Fasermaler)
+    - Bryan Kong
+    - Shi En
+- Supervisor: Prof. Tan U-Xuan
 
-https://www.youtube.com/watch?v=cJxotk4lR90
+## Objectives & Deliverables <a name="objectives-and-deliverables"></a>
 
-And my favorite video, Doggo doing a backflip:
+### Goal Deadlines & Status <a name="deadlines"></a>
 
-https://www.youtube.com/watch?v=aZylPK7SbV0
+- Mechanical Assembly (Status: In Progress ⌛)
+- Electrical Assembly (Status: In Progress ⌛)
+- Software Adjustment (Status: Completed ✔️)
+- Teleoperation Calibration (Status: Not Yet ❌)
 
-I&rsquo;ve been seeing a ton of amazing projects here on the forum and on the ODrive Discord channel, so I wanted to make a blog post explaining how Doggo works. I hope people might be able to learn something from this post, and perhaps even build their own Doggo and improve upon it. The whole project is open-source (links below) with CAD, code, and firmware available on Github. The robot code runs on a Teensy 3.5, and we use ODrives for motor control so I imagine a lot of people here could jump right in. We've also tried to make the robot inexpensive to build in your own lab, school, or home, and we absolutely welcome people to contribute to the project. 
+### Extra Objectives <a name="extra-objectives"></a>
 
-## Relevant links:
-GitHub project repository: https://github.com/Nate711/StanfordDoggoProject
-Full, downloadable Fusion 360 CAD: https://a360.co/2OBxTbH
-Teensy code: https://github.com/Nate711/Doggo
-ODrive fork: https://github.com/Nate711/ODrive
+- Implement ZED Stereo Camera
+- Implement autonomous navigation like LinoRobot
+- Complete documentation of Doggo's navigation stack
 
-# Mechanical Design
+## Features & Technologies <a name="features-and-technologies"></a>
 
-## Coaxial mechanism
-The coaxial mechanism that drives each leg is definitely the most complex mechanical component of the robot. It has also been the most troublesome. The way it works is that we have two TMotor MN5212 motors mounted on the carbon fiber side panel. We also have a 3D printed bearing block that has two bearings to hold the outer coaxial tube. (Refer to the cutaway CAD view below). The two motors transfer power to the coaxial shafts via 6mm wide, 3mm pitch GT2 belts between a 16T pulley and a 48T pulley. We didn&rsquo;t have room in our mass budget for regular, off-the-shelf pulleys, so we printed our own using the Xometry SLS service. As a side note, we learned to always specify to the service that the pulleys must be printed up. If the parts are printed at an angle, the geometry of the pulley teeth gets distorted because of the off-angle layers. Above the pulleys we have a waterjet aluminum bracket to maintain belt tension and thereby prevent skipping during high-torque situations. That said, it was a real pain to find the best center-to-center distance for the bracket because the slop in the connection between the motors and small pulleys, and the slop in the connection between the larger pulleys and the shafts meant that the center-to-center distance for the top bracket had to be 0.5mm larger than the nominal center-to-center distance prescribed by the belt supplier (SDP-SI). The biggest problem with this assembly was that the higher the belt tension, the more friction we had in the assembly. Higher friction means worse tracking performance for the motors, and also worse sensitivity to touch-down events and the like. On our next robot, we&rsquo;re hoping to have smoother, more precisely machined pulleys, and less slop in the coaxial assembly.
+### Features <a name="features"></a>
 
-#### CAD diagram
-![hero](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/diagram.jpeg)
+The Doggo boasts locomotion capabilities, including:
 
-#### IRL
-![diagram](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/coax.jpeg)
+- Trotting
+- Jumping
+- Backflipping
+- (More acrobatic moves to come?)
 
-#### In operation
-https://www.youtube.com/watch?v=6PL3aur4g4c
+### Technologies <a name="technologies"></a>
 
-## Legs
+The Doggo's firmware is written in C++. The Doggo is equipped with RF-based communication protocol using the XBees. In implementing autonomous navigation, we would replace the XBees with a Raspberry Pi equipped with the ROS navigation stack.
 
-Doggo has four, 2DOF legs of the SCARA flavor. By SCARA flavor I mean that each leg is a five bar linkage and the two upper links are driven co-axially. The actual leg links were waterjet cut by Big Blue Saw, which is a great online service (although make sure to upload all your parts in one DXF to save money). The waterjet parts were actually precise enough that we did not need to ream the holes for the bearings.
+## Prerequisites <a name="prerequisites"></a>
 
-### Joints
-For each joint, there are two deep groove ball bearings stacked next to each other in on link, and a shoulder bolt goes through them and threads into the opposing link.
+Before diving into this project, make sure that you are at least familiar with:
+- Arduino & C++
+- Mechanical Manufacturing & Assembly Techniques
+- Electrical Circuits (Microcontrollers, Motors & Encoders)
 
-![|](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/joint.png)
+## Demo <a name="demo"></a>
 
-### Feet
-The robot feet are silicone pieces that we made using a 3D printed, 2-part mold.
+> Include some videos, GIFs and/or pictures in this space! (And some brief walkthrough.) [color=#e053c1]
 
-![|](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/foot.jpeg)
+## Troubleshooting & FAQ <a name="troubleshooting-and-faq"></a>
 
-## Frame
+*# Tick when the problem is solved.*
+> After solving a problem, rephrase the problem to include the solution so as to suit this troubleshooting section. [name=James R T] [color=#907bf7]
 
-The frame of the robot is thankfully very simple. We have two waterjet, 4mm carbon fiber panels on each side, connected by two 1/32&rdquo; 5052 aluminum sheet metal parts. These sheet metal parts were cut using a waterjet, and then folded up by hand (long story, but because the two carbon fiber panels are canted inwards, the tabs on the aluminum part couldn&rsquo;t be folded on a brake).
+#### Unsolved
 
-![|](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/frame.jpeg)
+#### Solved
 
-# Electronics
-Doggo has four v3.5, 48V ODrives, two for each leg, mounted on the carbon fiber side panels. Sitting on a 2mm carbon fiber plate in the middle, we have a Teensy 3.5, a Sparkfun BNO080 IMU, and a 5mW Xbee. The Teensy talks to the ODrives over four separate UART lines, each operating at 500,000 baud. Underneath this plate, we have the power distribution board (a janky quadcopter PDB we found on Amazon), and a fancy Gigavac P105 Mini-Tactor relay so we can kill the robot power using an offboard ESTOP switch. We also put our two, 1000mah 6s Tattu lipo batteries down there.
+- The M3 10mm and M2.5 8mm screws are not long enough to fix the encoder mount and T-Motor onto the side panel.
+    *Solved by buying new screws.*
+- The holes on the 3D printed parts on the electronic plate support are too big to fit the insert. Need to reprint the part or buy bigger inserts.
+    *Solved by buying new inserts.*
+- The spacers between gears and motors need to be laser cut.
+    *Solved by laser cutting the parts.*
+- The leg parts fabricated according to the CAD files don't include the holes needed to tighten the leg and the axial
+    *Solved by trilling holes and using set screws to tighten up.*
+- The belt is not tight enough and it could slip in cases of high angular velocity of the motors.
+    *Solved by attaching the brackets on top of the belt assembly (original design by Stanford). However, this is a short-term solution since it might loosen over time or break.*
 
-Last, but not least, each motor has a AS5047P encoder to track the motor angle. We actually are only using the incremental interface, because at the time we built the robot, there was no absolute encoder support on the ODrive and we couldn&rsquo;t make the index pin functionality work either.
+#### Risk Assessment
 
-#### Electronics schematic
-![|](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/wiring.png)
+- Electronics should be handled with care.
 
-#### Layout of ODrives
-![|394x526](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/sides.jpeg)
+- Fabrication will involve physical and ergonomics hazard, so handle mechanical work with care. 
 
-#### Top side of the middle electronics plate
-![|](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/electronics.jpeg)
+- The Doggo should be placed in a controlled environment during testing. This is because it could hurt others when it jumps or backflips. 
 
-#### The belly of the robot: Relay (translucent piece in the middle), PDB (golden board in front of the relay), and batteries (close and far).
-![|](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/belly.jpeg)
+## Future Plans & Implementations <a name="future-plans-and-implementations"></a>
+
+We plan to implement autonomous navigation using the ROS navigation stack with a ZED camera. We also plan to add more acrobatic moves to the Doggo. Another possible implementation is to add OpenPose feature into Doggo.
+
+### Improvement Points for Doggo Mk. II
+
+> Minimize rabz gotchas and hacky stuffs.
+
+- Fix the Minitactor implementation.
+- Enable full IMU implementation (not just for recording backflips).
+- Add space to allow headers to be soldered to the encoders (solving the pressure issue).
+- We would need to redesign the whole belt assembly in order to be able to variably tighten the belt. This would lead to a more sustainable tightening mechanism, instead of using a 3D-printed part that could break or bend over time (prevent the CF from bending).
+- Change the gear-motor adapter material from acrylic to metal (by CNC).
+- Implement a better cable management system (shorten cables, tidying up cable space, use JST connectors, etc).
+- Implement a proper mounting of the electronics to the electronic CF plate (instead of only by using cable ties and tapes).
+- Increase encoder reliability by securing them in their corresponding positions with better methods.
+- Change all ODrives from 24V to 48V to prevent any burning (since the battery's voltage can rise to about 25V).
+- Create a customized electronic circuit optimized for Doggo (perfboard or PCB) [OPTIONAL].
+- Add a charging circuit [OPTIONAL].
+
+## Components <a name="components"></a>
+
+SOAR operates in Singapore, which has a significantly different economic landscape compared to Stanford in USA. Thus, some of the original parts were a bit difficult to find and we opted for alternatives. A full list of the components that we used will be included in the detailed BOM.
+
+[BOM](https://sutdapac-my.sharepoint.com/:x:/g/personal/soar_club_sutd_edu_sg/EaF5epe0R2xKlXmtg6U--s0B9OhUuDgEI9kDiBbzD2ODvg?e=lZnee1)
+
+> We will do up a new, improved, more detailed and more reliable BOM. Also, any ideas on how to improve the organization of these components? [name=James R T][color=#ea9b12]
+
+### Mechanical <a name="mechanical"></a>
+
+#### Gear Brace
+
+The triangular gear brace might seems a bit big and doesn't fit the gears well. But it is actually for pushing the gears away a bit so that the belts can be tightened.
+
+#### Legs & Coaxial
+
+The leg parts didn't come with holes to fix them to the coaxial parts. So we need to drill holes ourselves and use set screws or dowel pins to fix the legs.
+
+#### Spacers between Gears and Motors
+
+There should be spacers between the gears and motors in order to mount the gears onto the motors.
+
+### Controller/Driver <a name="controller-driver"></a>
+
+#### Teensy
+
+The code does not have a .ino file. Instead we use Platformio to compile all the code in the src and lib folders and upload it to the teensy.
+
+- Install VSCode and PlatformIO
+
+    - Download and install official Microsoft Visual Studio Code. PlatformIO IDE is built on top of it
+    - Open VSCode Package Manager
+    - Search for ```official platformio ide extension```
+    - Install PlatformIO IDE.
+
+- Get the PlatformIO sketch
+    - Clone https://github.com/Nate711/StanfordDoggoProject
+    - Open VSCode 
+    - Open the Doggo folder in VSCode
+    - Open `config.h` and comment out line 28 (`#define USE_XBEE`)
+
+        > This is done to test the motors through USB when the XBee is not configured/connected yet.
+    - Take note that some serial monitors like XCTU may use Carriage Return for line breaks, which is not recognised by the Teensy code. To enable it, change line 21 of Doggo/src/usb_serial.cpp:`if (c == ';' || c == '\n' || c == '\r') {`
+    - Plug in the teensy using a USB cable
+    - Press Build (tick in the bottom left bar of vscode)
+    - Press Upload (right arrow in the bottom left bar of vscode)
+    - Open the Serial Monitor (electric plug icon in the bottom left bar)
+> Alternatively, run `platformio run --target upload` on the root Doggo folder that contains the `platformio.ini` file.
+
+> In Doggo's `src` folder, change the original `#include` library lines of `datalog.cpp` and `imu.cpp` from `"arduino.h"` to `"Arduino.h"` and of `debug.h` from `"ChRT.h"` to `"ChRt.h"`.
+- Connect the UART cables from teensy to ODrives
+    - connect TX to RX and vice versa
+    - serial pins for teensy as described in https://www.pjrc.com/teensy/td_uart.html
+
+    - Teensy 3.5 ports listed:
+
+        Serial port | RX | TX
+        --- | --- | ---
+        1 | 0 | 1
+        2 | 9 | 10
+        3 | 7 | 8
+        4 | 31 | 32
+        5 (for XBee controller) | 34 | 33
+    - Odrive UART TX / RX
+        TX | RX
+        --- | ---
+        GPIO1 | GPIO2
+- Open a serial monitor( Arduino IDE or PlatformIO serial monitor should be fine )
+- Available serial commands:
+    -    Use a serial monitor (we use the Arduino one) to send over these commands to Doggo in order to set the behavior or to change parameters.
+    - Changing behavior
+    - General behaviors:
+        - 'S': Put the robot in the STOP state. The legs will move to the neutral position. This is like an software e-stop.  
+        - 'D': Toggle on and off the printing of (D)ebugging values.
+        - 'R': (R)eset. Move the legs slowly back into the neutral position.
+
+    - Working gaits:  
+        - 'B': (B)ound. The gait is currently unstable.  
+        - 'E': Danc(e). Make the robot do a little bouncy dance.    
+        - 'F': (F)lip. Execute a backflip.  
+        - 'H': (Hop). Causes the robot to start making small vertical hops.  
+        - 'J': (J)ump. A full-torque upwards leap.  
+        - 'T': (T)rot. Begin a forward trot. This is currently the only working forward gait.  
+
+    - Available, but not working:
+        - 'W': (W)alk. Does not work currently.  
+        - 'P': ( P )ronk. Much like hop, but this one doesn't work.  
+
+    - Changing gait properties:
+        - 'f {float}': Set the gait frequency in Hz.  
+        - 'l {float}': Set the stride length in meters.  
+        - 'h {float}': Set the stance height (neutral height) in meters.  
+        - 'u {float}': Set the distance (in meters) that the leg travels above the neutral line during a stride.  
+        - 'd {float}': Set the distance (in meters) the leg travels below the neutral line during a stride.  
+        - 'p {float}': Set the proportion of time which the leg is below the neutral line versus above it.    
+    - Changing compliance (gains):
+        - 'g {float} {float} {float} {float}': Set the compliance gains. The ordering is {kp_theta} {kd_theta} {kp_gamma} {kd_gamma}. A good default is 'g 80 0.5 50 0.5'.  
+
+### Sensors <a name="sensors"></a>
+
+#### Contactor
+![alt text](https://i.imgur.com/AFyg6nn.png "How to connect the Contactor (MZJ 100A)")
+
+
+#### Encoder
+
+- Make sure the magnet and encoder have the same center as the T-motor axle 
+- Commonly seen in e-skateboards
+
+#### Coaxial
+
+- The inner and outer leg shafts are supposed to be tight fitting with the bearings. Due to fabrication inaccuracy, the shafts might be a bit thicker than the bearings. When putting them together, must be careful not to break the bearings.
+
+#### ODrive
+
+- Although the original Doggo uses ODrive 3.5 24v, we ended up using different models with success:
+    - ODrive 3.5 48v
+    - ODrive 3.6 24v
+
+- ##### Testing of the ODrive
+
+    -  Follow this: https://docs.odriverobotics.com/
+
+    - Run these and hope the odrive usb is detected
+        ```
+        echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="1209", ATTR{idProduct}=="0d[0-9][0-9]", MODE="0666"' | sudo tee /etc/udev/rules.d/50-odrive.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger # until you reboot you may need to do this everytime you reset the ODrive
+        ```
+
+    - If the ODrive is not connecting, try changing the power source. A dim light on the ODrive indicates insufficient power.
+
+    - Always calibrate when the ODrive is first started
+        ```
+        odrv0.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE 
+        ```
+
+    - Reccomended P gain
+        ```
+        odrv0.axis0.controller.config.pos_gain = 0.05
+        ```
+
+    - Manual control is only enabled when closed loop control is enabled:
+        ```
+        odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+        ```
+
+
+    - try moving the motor
+        ```
+        odrv0.axis0.controller.pos_setpoint = 1000
+        ```
+
+- #### Setup (in Linux)
+
+    -  #### Installing custom firmware
+
+        - Clone Nate's Odrive repository https://github.com/Nate711/ODrive
+        - Navigate to ODrive/Firmware
+        - Copy `tup.config.default` as 'tup.config'
+        `cp tup.config.default tup.config`
+        - Edit the value of `CONFIG_BOARD_VERSION` according to the ODrive you are using:
+             ODrive model | Value | Remarks
+            --- | --- | ---
+            3.1 | v3.1 | Untested
+            3.2 | v3.2 | Untested
+            3.3 | v3.3 | Untested
+            3.4 24v | v3.4-24V | Untested
+            3.4 48v | v3.4-48V | Untested
+            3.5 24v | v3.5-24V | 
+            3.5 48v | v3.5-48V | 
+            3.6 24v | v3.6-24V | Requires change to Tupfile.lua
+            3.6 24v | v3.6-56V | Requires change to Tupfile.lua / Untested
+            -    Note: for ODrive 3.6 and later: An addition to Tupfile.lua is required (based on the main branch of the ODrive repo).
+            ```
+            elseif boardversion == "v3.5-48V" then
+                boarddir = 'Board/v3'
+                FLAGS += "-DHW_VERSION_MAJOR=3 -DHW_VERSION_MINOR=5"
+                FLAGS += "-DHW_VERSION_VOLTAGE=48"
+            ### ADDITIONAL PART STARTS HERE
+            elseif boardversion == "v3.6-24V" then
+                boarddir = 'Board/v3'
+                FLAGS += "-DHW_VERSION_MAJOR=3 -DHW_VERSION_MINOR=6"
+                FLAGS += "-DHW_VERSION_VOLTAGE=24"
+            elseif boardversion == "v3.6-56V" then
+                boarddir = 'Board/v3'
+                FLAGS += "-DHW_VERSION_MAJOR=3 -DHW_VERSION_MINOR=6"
+                FLAGS += "-DHW_VERSION_VOLTAGE=56"
+            ### ADDITIONAL PART ENDS HERE
+            elseif boardversion == "" then
+            ```
+        - Do `make`
+            - This may require you to `sudo apt install tup`
+        - The firmware can be found in ODrive/Firmware/Build/
+        - For users of ODrive 3.4 and lower please refer to https://docs.odriverobotics.com/odrivetool.html#device-firmware-update for firmware flashing instructions
+        - For ODrive 3.5 and higher, run the following:
+        ```
+        odrivetool dfu path/to/ODrive/Firmware/build/ODriveFirmware.hex
+        ```
+
+    - #### Setting parameters
+
+        - Nate's default configuration script can be found here:
+        ```
+        python ODrive/tools/doggo_setup.py
+        ```
+        - By default the ODrive takes no action at startup and goes to idle immediately. In order to change what startup procedures are used, set the startup procedures you want to True. The ODrive will sequence all enabled startup actions selected in the order shown below.
+            ```
+            odrv0.axis0.config.startup_motor_calibration = True
+            odrv0.axis0.config.startup_encoder_offset_calibration = True
+            odrv0.axis0.config.startup_closed_loop_control = True
+            ```
+        - Repeat for axis1.
+            ```
+            odrv0.axis1.config.startup_motor_calibration = True
+            odrv0.axis1.config.startup_encoder_offset_calibration = True
+            odrv0.axis1.config.startup_closed_loop_control = True
+            ```
+        - Save and reboot
+            ```
+            odrv0.save_configuration()
+            odrv0.reboot()
+            ```
+        - Refer to the teensy section on how to connect the ODrive to the Teensy via UART
+
+    - take note that ```odrv0.save_configuration()``` only works once per reboot!
+
+#### XBee
+
+1. Follow [this tutorial](https://learn.sparkfun.com/tutorials/exploring-xbees-and-xctu/all).
+2. Install [X-CTU](https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-utilities), [Digi USB RF Drivers](https://www.digi.com/products/embedded-systems/digi-xbee/digi-xbee-tools/xctu#productsupport-drivers) and [FTDI Drivers](https://www.ftdichip.com/Drivers/VCP.htm) for your respective operating system.
+3. Connect both XBees to your master computer for initial configuration.
+
+    > X-CTU can only detect XBees that do not have wires soldered to the LED pins yet.
+
+4. Follow the tutorial to define your unique network (CH, ID, DH, DL and MY).
+5. Done! You can proceed to connect one XBee to your master computer and the other XBee to the Teensy.
+    a. Connect RX(Xbee) to RX(Teensy Serial port 5) and TX(Xbee) to TX(Teensy Serial port 5)
+    b. when using XCTU console to send commands to the teensy, use `;` to simulate a line break to send commands
+
+#### IMU
+
+- The particular IMU used for our Doggo is the CJMCU-80
+- information taken from page 10 of https://cdn.sparkfun.com/assets/1/3/4/5/9/BNO080_Datasheet_v1.3.pdf
+- How to connect the IMU to the teensy:
+    - Teensy 3.5 port | IMU port | meaning
+        --- | --- | ---
+        3.3V | 3.3V | Power
+        GND | GND | Ground
+        11 | SA0 | MOSI (data input)
+        12 | SDA | MISO (data output)
+        13 | SCL | SCK (SPI clock)
+        14 | PS0 | Protocol Select 0 / WAKE (also needs to be turned high on boot to activate SPI)
+        15 | PS1 | Protocol Select 1 (needs to be turned high on boot to activate SPI)
+        16 | RST | Reset pin
+        17 | INT | Interrupt pin ( to bug the teensy )
+        
+## Additional Resources <a name="additional-resources"></a>
+
+- [ODrive Robotics](https://docs.odriverobotics.com/)
+- [Sparkfun XBee](https://learn.sparkfun.com/tutorials/exploring-xbees-and-xctu/all)
 
 # Software
 
-## Overview
+## Prerequisites
 
-The Doggo software is relatively simple as far as things go. The gist of it is that we have a state machine that flips between different behaviors (like trot, jump etc), and for each behavior we send different position commands and gains to the four ODrives. We also have some helper threads running, like one to take IMU measurements, another to record telemetry from the ODrives, another to take commands over Xbee, etc.
+### ODRIVE Development Tools
 
-## Leg trajectories
+The recommended tools for ODrive development are:
 
-The robot walks, trots, bounds, and pronks by commanding different sinusoidal open-loop trajectories to the four ODrives. The leg trajectories are composed of two halves of sinusoidal curves for the flight and stance phases shown in orange and purple in the picture. The geometric parameters of the sinusoids, the virtual leg compliance, and the duration of time that the leg spends traversing each sinusoidal segment, were varied to create different gaits.
+- **make**: Used to invoke tup
+- **Tup**: The build system used to invoke the compile commands
+- **Python**: For running the Python tools
+- **ARM GNU Compiler**: For cross-compiling code
+- **ARM GDB**: For debugging the code and stepping through on the device
+- **OpenOCD**: For flashing the ODrive with the STLink/v2 programmer
 
-![|265x299](https://github.com/Nate711/StanfordDoggoProject/blob/master/images/trajectory.png)
+Linux (Ubuntu 18.04)
 
-At any given time, the Teensy computes the desired foot locations in cartesian coordinates, and then converts them to leg angles (θ) and leg separations (γ). These two numbers describe the virtual leg that originates at the hip joint of the leg and terminates at the foot.
+``` 
+$ sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa
+$ sudo apt-get update
+$ sudo apt-get install gcc-arm-embedded
+$ sudo apt-get install openocd
 
-These virtual leg parameters (theta and gamma) and their corresponding virtual stiffness and damping coefficients are sent from the Teensy to the four ODrives at the 100Hz refresh rate. The ODrives then run a custom PD controller to generate torques in theta-gamma space. The ODrives then use the [Jacobian](http://robots.iit.edu/uploads/2/5/7/1/25715664/mmae_540_-_lecture_2_-_manipulator_kinematics.pdf) of the leg to transform torques in theta-gamma space into torques in the motor0-motor1 space.
+// To install Tup
+$ sudo add-apt-repository ppa:jonathonf/tup 
+$ sudo apt update 
+$ sudo apt install tup
+```
 
-## ODrive Control
-We implemented a custom binary UART protocol to send and receive data. The binary protocol is significantly faster than the ASCII protocol, which (I think) was the only protocol implemented for the Arduino when we built the robot. If you'd like more of the specifics, visit https://github.com/Nate711/Doggo/blob/master/lib/ODriveArduino/ODriveArduino.cpp
+*source:* [link](https://docs.odriverobotics.com/developer-guide.html)
 
-**I think that about wraps everything up! Let me know if you have questions, and I&rsquo;ll also try to update the post if people are interested in more details.**
+#### ODrive Default Firmware
+
+```
+// Clone Nate's ODrive Firmware
+$ git clone https://github.com/Nate711/ODrive.git
+
+$ cd ODrive/Firmware
+$ make
+// if all blue then good
+// if got red, then check error message
+
+$ cd build
+
+// Flash firmware's hex file to odrive
+$ sudo odrivetool dfu ODriveFirmware.hex
+```
