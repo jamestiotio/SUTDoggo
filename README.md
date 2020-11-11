@@ -102,6 +102,9 @@ Before diving into this project, make sure that you are at least familiar with:
 
 #### Unsolved
 
+- Current Doggo is flimsy and "limps over" when walking. Status is not ready for deployment. Need to attach the silicone leg molds since we suspect that there is almost no friction preventing the Doggo from slipping. If the molds are not compatible, need to recreate the molds. After molds are attached, recalibration is needed and some firmware constants might need to be changed. If done properly, the Doggo should be able to trot and walk properly. Only by then, testing for backflipping can begin.
+- Once Doggo is working properly, update this README and populate with relevant details, especially these sections: [Objectives](#objectives-and-deliverables), [Demo](#demo), [Troubleshooting & FAQ](troubleshooting-and-faq) and [Future Plans & Implementations](#future-plans-and-implementations).
+
 #### Solved
 
 - The M3 10mm and M2.5 8mm screws are not long enough to fix the encoder mount and T-Motor onto the side panel.
@@ -140,6 +143,7 @@ We plan to implement autonomous navigation using the ROS navigation stack with a
 - Implement a proper mounting of the electronics to the electronic CF plate (instead of only by using cable ties and tapes).
 - Increase encoder reliability by securing them in their corresponding positions with better methods.
 - Change all ODrives from 24V to 48V to prevent any burning (since the battery's voltage can rise to about 25V).
+- Convert the Doggo firmware into a ROS workspace.
 - Create a customized electronic circuit optimized for Doggo (perfboard or PCB) [OPTIONAL].
 - Add a charging circuit [OPTIONAL].
 
@@ -298,7 +302,7 @@ The code does not have a .ino file. Instead we use Platformio to compile all the
 
 - #### Setup (in Linux)
 
-    -  #### Installing custom firmware
+    - #### Installing custom firmware
 
         - Clone Nate's Odrive repository https://github.com/Nate711/ODrive
         - Navigate to ODrive/Firmware
@@ -335,16 +339,17 @@ The code does not have a .ino file. Instead we use Platformio to compile all the
             elseif boardversion == "" then
             ```
         - Do `make`
+            
             - This may require you to `sudo apt install tup`
         - The firmware can be found in ODrive/Firmware/Build/
         - For users of ODrive 3.4 and lower please refer to https://docs.odriverobotics.com/odrivetool.html#device-firmware-update for firmware flashing instructions
         - For ODrive 3.5 and higher, run the following:
         ```
         odrivetool dfu path/to/ODrive/Firmware/build/ODriveFirmware.hex
-        ```
-
-    - #### Setting parameters
-
+    ```
+    
+- #### Setting parameters
+    
         - Nate's default configuration script can be found here:
         ```
         python ODrive/tools/doggo_setup.py
@@ -366,8 +371,8 @@ The code does not have a .ino file. Instead we use Platformio to compile all the
             odrv0.save_configuration()
             odrv0.reboot()
             ```
-        - Refer to the teensy section on how to connect the ODrive to the Teensy via UART
-
+    - Refer to the teensy section on how to connect the ODrive to the Teensy via UART
+    
     - take note that ```odrv0.save_configuration()``` only works once per reboot!
 
 #### XBee
