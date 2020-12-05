@@ -78,7 +78,7 @@ The Doggo boasts locomotion capabilities, including:
 - Trotting
 - Jumping
 - Backflipping
-- (More acrobatic moves to come?)
+- (More acrobatic moves/maneuvers to come?)
 
 ### Technologies <a name="technologies"></a>
 
