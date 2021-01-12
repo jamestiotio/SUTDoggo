@@ -238,14 +238,14 @@ The code does not have a .ino file. Instead we use Platformio to compile all the
 
     - Download and install official Microsoft Visual Studio Code. PlatformIO IDE is built on top of it
     - Open VSCode Package Manager
-    - Search for ```official platformio ide extension```
+    - Search for ```official platformio ide extension``` and install the [PlatformIO VSCode Extension](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide).
     - Install PlatformIO IDE.
 
 - Check if you possess the `49-teensy.rules` file under the `/etc/udev/rules.d/` directory. If you do not have it, grab the latest version from [here](http://www.pjrc.com/teensy/49-teensy.rules) and put it under the specified folder. This is necessary for the firmware to be properly flashed to the Teensy after building.
 
 - Get the PlatformIO sketch
     - Clone https://github.com/Nate711/StanfordDoggoProject
-    - Open VSCode 
+    - Open VSCode
     - Open the Doggo folder in VSCode
     - Open `config.h` and comment out line 28 (`#define USE_XBEE`)
 
