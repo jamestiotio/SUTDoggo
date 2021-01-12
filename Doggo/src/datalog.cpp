@@ -1,7 +1,7 @@
 #ifndef DATALOG_H
 #define DATALOG_H
 
-#include "arduino.h"
+#include "Arduino.h"
 #include "datalog.h"
 #include "ChRt.h"
 #include "SdFat.h"

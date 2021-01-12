@@ -1,7 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include "ChRT.h"
+#include "ChRt.h"
 #include "globals.h"
 
 extern THD_WORKING_AREA(waPrintDebugThread, 1024);
