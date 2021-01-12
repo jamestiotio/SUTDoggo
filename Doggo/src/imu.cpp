@@ -1,4 +1,4 @@
-#include "arduino.h"
+#include "Arduino.h"
 #include "datalog.h"
 #include "ChRt.h"
 #include "SdFat.h"
