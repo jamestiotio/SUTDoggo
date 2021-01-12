@@ -241,6 +241,8 @@ The code does not have a .ino file. Instead we use Platformio to compile all the
     - Search for ```official platformio ide extension```
     - Install PlatformIO IDE.
 
+- Check if you possess the `49-teensy.rules` file under the `/etc/udev/rules.d/` directory. If you do not have it, grab the latest version from [here](http://www.pjrc.com/teensy/49-teensy.rules) and put it under the specified folder. This is necessary for the firmware to be properly flashed to the Teensy after building.
+
 - Get the PlatformIO sketch
     - Clone https://github.com/Nate711/StanfordDoggoProject
     - Open VSCode 
