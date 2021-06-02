@@ -38,13 +38,13 @@ This repository will be divided into three parts to house the different parts of
     - [Kevin Ma Yuchen](https://github.com/Kevinskwk)
     - Zhi Cong
     - Yoong Hao
-    - [Dody Senputra](https://github.com/ulaladungdung)
+    - [Dody Senputra](https://github.com/senputra)
 - Electrical Engineers:
     - [Chung Wah Kit](https://github.com/sdencanted)
     - Gerald Wong
 - Software Developers:
     - [James Raphael Tiovalen](https://github.com/jamestiotio)
-    - [Dody Senputra](https://github.com/ulaladungdung)
+    - [Dody Senputra](https://github.com/senputra)
     - [Kevin Ma Yuchen](https://github.com/Kevinskwk)
     - [Chung Wah Kit](https://github.com/sdencanted)
 - Mentors:
